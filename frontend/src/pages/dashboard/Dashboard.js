@@ -32,7 +32,7 @@ const Dashboard = () => {
       <ProductSummary products={products} />
       <ProductList products={products} isLoading={isLoading} />
        {/* Add a link or button to navigate to the Cart component */}
-       <Link to="/cart">Go to Cart</Link>
+       <Link to="/cart"></Link>
     </div>
   );
 };

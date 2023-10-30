@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SpinnerImg } from "../../loader/Loader";
 import "./productList.scss";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaCartPlus, FaTrashAlt } from "react-icons/fa";
 import { AiOutlineEye } from "react-icons/ai";
 import Search from "../../search/Search";
 import { useDispatch, useSelector } from "react-redux";
@@ -147,6 +147,11 @@ const ProductList = ({ products, isLoading }) => {
                             color={"red"}
                             onClick={() => confirmDelete(_id)}
                           />
+                        </span>
+                        <span>
+                          <Link >
+                            <FaCartPlus size={20} color={"blue"} />
+                          </Link>
                         </span>
                       </td>
                     </tr>

@@ -5,6 +5,7 @@ import { BsCart4, BsCartX } from "react-icons/bs";
 import { BiCategory } from "react-icons/bi";
 import InfoBox from "../../infoBox/InfoBox";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   CALC_CATEGORY,
   CALC_OUTOFSTOCK,
@@ -13,12 +14,16 @@ import {
   selectOutOfStock,
   selectTotalStoreValue,
 } from "../../../redux/features/product/productSlice";
+import { CALC_CART_VALUE } from "../../../redux/features/cart/cartSlice"
+
 
 // Icons
 const earningIcon = <AiFillDollarCircle size={40} color="#fff" />;
 const productIcon = <BsCart4 size={40} color="#fff" />;
+const cartItems = <BsCart4 size={40} color="#fff" />;
 const categoryIcon = <BiCategory size={40} color="#fff" />;
 const outOfStockIcon = <BsCartX size={40} color="#fff" />;
+const salesIcon = <AiFillDollarCircle size={40} color="#fff" />;
 
 // Format Amount
 export const formatNumbers = (x) => {
@@ -30,11 +35,13 @@ const ProductSummary = ({ products }) => {
   const totalStoreValue = useSelector(selectTotalStoreValue);
   const outOfStock = useSelector(selectOutOfStock);
   const category = useSelector(selectCategory);
+  
 
   useEffect(() => {
     dispatch(CALC_STORE_VALUE(products));
     dispatch(CALC_OUTOFSTOCK(products));
     dispatch(CALC_CATEGORY(products));
+    dispatch(CALC_CART_VALUE(cartItems));
   }, [dispatch, products]);
 
   return (
@@ -65,6 +72,23 @@ const ProductSummary = ({ products }) => {
           count={category.length}
           bgColor="card4"
         />
+        <a href= "/cart">
+        <InfoBox
+          icon={cartItems}
+          title={"View Cart"}
+          count={cartItems.length}
+          bgColor="card5"
+        />
+      </a>
+
+      <a href= "/salesHistory">
+        <InfoBox
+          icon={salesIcon}
+          title={"Sales History"}
+          bgColor="card6"
+        />
+      </a>
+
       </div>
     </div>
   );
