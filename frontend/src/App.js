@@ -66,6 +66,16 @@ function App() {
             </Sidebar>
           }
         />
+          <Route
+          path="/salesHistory"
+          element={
+            <Sidebar>
+              <Layout>
+                <SalesHistory />
+              </Layout>
+            </Sidebar>
+          }
+        />
         <Route
           path="/salesHistory"
           element={
