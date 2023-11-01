@@ -20,8 +20,11 @@ import { Link } from "react-router-dom";
 
 const ProductList = ({ products, isLoading }) => {
   const [search, setSearch] = useState("");
-  const filteredProducts = useSelector(selectFilteredPoducts);
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const [defaultQuantity, setDefaultQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(defaultQuantity);
 
+  const filteredProducts = useSelector(selectFilteredPoducts);
   const dispatch = useDispatch();
 
   const shortenText = (text, n) => {
@@ -77,6 +80,25 @@ const ProductList = ({ products, isLoading }) => {
   useEffect(() => {
     dispatch(FILTER_PRODUCTS({ products, search }));
   }, [products, search, dispatch]);
+
+
+  // Function to open the cart modal
+  const openCartModal = () => {
+    setDefaultQuantity(1);
+    setQuantity(1);
+    setIsCartModalOpen(true);
+  };
+
+  // Function to close the cart modal
+  const closeCartModal = () => {
+    setIsCartModalOpen(false);
+  };
+
+  // Function to handle the "Add to Cart" button click
+  const handleAddToCart = () => {
+    console.log(`Added ${quantity} items to the cart.`);
+    closeCartModal();
+  };
 
   return (
     <div className="product-list">
@@ -149,9 +171,11 @@ const ProductList = ({ products, isLoading }) => {
                           />
                         </span>
                         <span>
-                          <Link >
-                            <FaCartPlus size={20} color={"blue"} />
-                          </Link>
+                          <FaCartPlus
+                            size={20}
+                            color={"blue"}
+                            onClick={openCartModal}
+                          />
                         </span>
                       </td>
                     </tr>
@@ -176,6 +200,22 @@ const ProductList = ({ products, isLoading }) => {
           activeLinkClassName="activePage"
         />
       </div>
+
+      {/* Cart Modal */}
+      {isCartModalOpen && (
+        <div className="cart-modal">
+          <div className="modal-content">
+            <h3>Add Quantity</h3>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+            <button className="btn-cart" onClick={handleAddToCart}>Add to Cart</button>
+            <button className="btn-close" onClick={closeCartModal}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
