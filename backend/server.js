@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
+const cartRoute = require("./routes/cartRoute");
 const productRoute = require("./routes/productRoute"); // Import the productRoute
 const contactRoute = require("./routes/contactRoute"); // Import the contactRoute
 const errorHandler = require("./middleWare/errorMiddleware");
@@ -27,6 +28,7 @@ app.use(
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes Middleware
+app.use("/api/cart", cartRoute);
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/contactus", contactRoute);

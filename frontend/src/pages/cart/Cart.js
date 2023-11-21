@@ -17,9 +17,21 @@ import { FaTrashAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Card from "../../components/card/Card";
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
+import { getCart } from '../../services/cartAPI';
+
+const product = []
+let totalAmount = 0;
+let totalQuantity = 0;
 
 const Cart = () => {
-  const cartItems = useSelector(selectCartItems);
+
+  let cartItems = useSelector(selectCartItems);
+  // getCart().then((res) => {
+  //   console.log(res)
+  //   if (res.items) {
+  //     cartItems = res
+  //   }
+  // })
   const cartTotalAmount = useSelector(selectCartTotalAmount);
   const cartTotalQuantity = useSelector(selectCartTotalQuantity);
   const dispatch = useDispatch();
@@ -41,6 +53,8 @@ const Cart = () => {
 
   const clearCart = () => {
     dispatch(CLEAR_CART());
+
+
   };
 
   useEffect(() => {
@@ -53,7 +67,8 @@ const Cart = () => {
 
   const checkout = () => {
     if (isLoggedIn) {
-      navigate("/checkout-details");
+      console.log(totalAmount)
+      navigate("/check out-details");
     } else {
       dispatch(SAVE_URL(url));
       navigate("/login");
@@ -86,52 +101,59 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map((cart, index) => {
-                  const { id, name, price, imageURL, cartQuantity } = cart;
-                  return (
-                    <tr key={id}>
-                      <td>{index + 1}</td>
-                      <td>
-                        <p>
-                          <b>{name}</b>
-                        </p>
-                        <img
-                          src={imageURL}
-                          alt={name}
-                          style={{ width: "100px" }}
-                        />
-                      </td>
-                      <td>{price}</td>
-                      <td>
-                        <div className={styles.count}>
-                          <button
-                            className="--btn"
-                            onClick={() => decreaseCart(cart)}
-                          >
-                            -
-                          </button>
+                {
+
+                  cartItems.map((cart, index) => {
+                    console.log(cart)
+                    const { name, price, image } = cart.product;
+                    const { _id, quantity } = cart;
+
+                    if (!product.includes(_id)) {
+                      product.push(_id);
+                      totalAmount += (Number(price) * Number(quantity))
+                      totalQuantity += Number(quantity)
+                    }
+
+
+                    console.log(totalAmount)
+                    return (
+                      <tr key={_id}>
+                        <td>{index + 1}</td>
+                        <td>
                           <p>
-                            <b>{cartQuantity}</b>
+                            <b>{name}</b>
                           </p>
-                          <button
-                            className="--btn"
-                            onClick={() => increaseCart(cart)}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </td>
-                      <td>{(price * cartQuantity).toFixed(2)}</td>
-                      <td className={styles.icons}>
-                        <FaTrashAlt
-                          size={19}
-                          color="red"
-                          onClick={() => removeFromCart(cart)}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
+                          <img
+                            src={image.filePath}
+                            alt={name}
+                            style={{ width: "100px" }}
+                          />
+                        </td>
+                        <td>{price}</td>
+                        <td>
+                          <div className={styles.count}>
+                            <p>
+                              <b>{quantity}</b>
+                            </p>
+                            {/* <button
+                              className="--btn"
+                              onClick={() => increaseCart(cart)}
+                            >
+                              +
+                            </button> */}
+                          </div>
+                        </td>
+                        <td>{(Number(price) * quantity).toFixed(2)}</td>
+                        <td className={styles.icons}>
+                          <FaTrashAlt
+                            size={19}
+                            color="red"
+                            onClick={() => removeFromCart(cart)}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
             <div className={styles.summary}>
@@ -145,11 +167,11 @@ const Cart = () => {
                 <br />
                 <Card cardClass={styles.card}>
                   <p>
-                    <b> {`Cart item(s): ${cartTotalQuantity}`}</b>
+                    <b> {`Cart item(s): ${totalQuantity}`}</b>
                   </p>
                   <div className={styles.text}>
                     <h4>Subtotal:</h4>
-                    <h3>{`$${cartTotalAmount.toFixed(2)}`}</h3>
+                    <h3>{`$${totalAmount}`}</h3>
                   </div>
                   <p>Tax an shipping calculated at checkout</p>
                   <button
