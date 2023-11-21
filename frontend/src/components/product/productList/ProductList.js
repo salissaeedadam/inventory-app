@@ -18,10 +18,13 @@ import {
 } from "../../../redux/features/product/productSlice";
 import { Link } from "react-router-dom";
 
+import { addToCart } from "../../../services/cartAPI";
+
 const ProductList = ({ products, isLoading }) => {
   const [search, setSearch] = useState("");
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [defaultQuantity, setDefaultQuantity] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState("");
   const [quantity, setQuantity] = useState(defaultQuantity);
 
   const filteredProducts = useSelector(selectFilteredPoducts);
@@ -83,7 +86,8 @@ const ProductList = ({ products, isLoading }) => {
 
 
   // Function to open the cart modal
-  const openCartModal = () => {
+  const openCartModal = (id) => {
+    setSelectedProduct(id);
     setDefaultQuantity(1);
     setQuantity(1);
     setIsCartModalOpen(true);
@@ -95,8 +99,12 @@ const ProductList = ({ products, isLoading }) => {
   };
 
   // Function to handle the "Add to Cart" button click
-  const handleAddToCart = () => {
-    console.log(`Added ${quantity} items to the cart.`);
+  const handleAddToCart = async () => {
+    console.log(`Added ${quantity} items to the cart. ${selectedProduct}`);
+    // call cart api to add to cart
+    await addToCart(selectedProduct)
+    // call add to cart action from redux
+
     closeCartModal();
   };
 
@@ -174,7 +182,7 @@ const ProductList = ({ products, isLoading }) => {
                           <FaCartPlus
                             size={20}
                             color={"blue"}
-                            onClick={openCartModal}
+                            onClick={() => openCartModal(_id)}
                           />
                         </span>
                       </td>
