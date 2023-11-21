@@ -18,7 +18,8 @@ import {
 } from "../../../redux/features/product/productSlice";
 import { Link } from "react-router-dom";
 
-import { addToCart } from "../../../services/cartAPI";
+import { addToCart, getCart } from "../../../services/cartAPI";
+import { ADD_TO_CART } from "../../../redux/features/cart/cartSlice";
 
 const ProductList = ({ products, isLoading }) => {
   const [search, setSearch] = useState("");
@@ -104,6 +105,12 @@ const ProductList = ({ products, isLoading }) => {
     // call cart api to add to cart
     await addToCart(selectedProduct)
     // call add to cart action from redux
+    const cart = await getCart()
+
+    console.log(cart)
+
+    ADD_TO_CART(cart.items)
+    localStorage.setItem('cartItems', JSON.stringify(cart.items))
 
     closeCartModal();
   };
@@ -146,6 +153,7 @@ const ProductList = ({ products, isLoading }) => {
               <tbody>
                 {currentItems.map((product, index) => {
                   const { _id, name, category, price, quantity } = product;
+                  console.log(_id, name, category, price, quantity)
                   return (
                     <tr key={_id}>
                       <td>{index + 1}</td>
