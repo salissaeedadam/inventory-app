@@ -21,7 +21,9 @@ import EditProduct from "./pages/editProduct/EditProduct";
 import Profile from "./pages/profile/Profile";
 import EditProfile from "./pages/profile/EditProfile";
 import Contact from "./pages/contact/Contact";
+import Checkout from "./pages/checkout/Checkout";
 import SalesHistory from "./pages/salesHistory/SalesHistory";
+import PaystackIntegration from "./pages/paystack/PaystackIntegration";
 
 axios.defaults.withCredentials = true;
 
@@ -48,6 +50,16 @@ function App() {
 
         <Route
           path="/dashboard"
+          element={
+            <Sidebar>
+              <Layout>
+                <Dashboard />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/{paystackIntegration}"
           element={
             <Sidebar>
               <Layout>

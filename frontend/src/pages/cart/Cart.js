@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Card from "../../components/card/Card";
 import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
 import { getCart } from '../../services/cartAPI';
-
+import PaystackIntegration from "../paystack/PaystackIntegration";
 const product = []
 let totalAmount = 0;
 let totalQuantity = 0;
@@ -173,13 +173,13 @@ const Cart = () => {
                     <h4>Subtotal:</h4>
                     <h3>{`$${totalAmount}`}</h3>
                   </div>
-                  <p>Tax an shipping calculated at checkout</p>
-                  <button
-                    className="--btn --btn-primary --btn-block"
-                    onClick={checkout}
-                  >
-                    Checkout
-                  </button>
+                  <Link to="/paystackIntegration"> 
+                      <button
+                        className="--btn --btn-primary --btn-block"
+                      >
+                        Checkout
+                      </button>
+                  </Link>
                 </Card>
               </div>
             </div>
