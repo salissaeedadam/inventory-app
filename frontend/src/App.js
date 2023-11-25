@@ -59,7 +59,7 @@ function App() {
           }
         />
         <Route
-          path="/{paystackIntegration}"
+          path="/paystackIntegration"
           element={
             <Sidebar>
               <Layout>
@@ -74,6 +74,16 @@ function App() {
             <Sidebar>
               <Layout>
                 <Cart />
+              </Layout>
+            </Sidebar>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <Sidebar>
+              <Layout>
+                <Checkout />
               </Layout>
             </Sidebar>
           }

@@ -1,0 +1,81 @@
+/* checkout.scss */
+
+/* Main container styles */
+.checkout-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading styles */
+  .checkout-heading {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  /* Total amount display */
+  .checkout-total {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  /* Payment method buttons container */
+  .payment-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  }
+  
+  /* Payment confirmation styles */
+  .payment-confirmation {
+    margin-top: 20px;
+  
+    p {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+  
+    button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #e0e0e0;
+      }
+    }
+  }
+  
+  /* Cancel link style */
+  .cancel-link {
+    display: block;
+    margin-top: 30px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  
+    &:hover {
+      color: #555;
+    }
+  }
+  
