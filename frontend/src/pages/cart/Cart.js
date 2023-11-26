@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ADD_TO_CART,
@@ -16,14 +16,21 @@ import styles from "./CartPage.module.scss";
 import { FaTrashAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Card from "../../components/card/Card";
-import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
-import { getCart } from '../../services/cartAPI';
-import PaystackIntegration from "../paystack/PaystackIntegration";
-const product = []
+import {
+  selectIsLoggedIn,
+  selectUser,
+} from "../../redux/features/auth/authSlice";
+
+import { usePaystackPayment } from "react-paystack";
+
+const product = [];
 let totalAmount = 0;
 let totalQuantity = 0;
 
 const Cart = () => {
+  const user = useSelector(selectUser);
+
+  console.log(user);
 
   let cartItems = useSelector(selectCartItems);
   // getCart().then((res) => {
@@ -53,8 +60,6 @@ const Cart = () => {
 
   const clearCart = () => {
     dispatch(CLEAR_CART());
-
-
   };
 
   useEffect(() => {
@@ -65,13 +70,41 @@ const Cart = () => {
 
   const url = window.location.href;
 
+  //paystack integration below
+  console.log(totalAmount);
+
+  //paystack config for the particular payment
+  const config = {
+    reference: Math.random(),
+    email: user?.email || "email@example.com",
+    amount: totalAmount * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+    publicKey:
+      process.env.REACT_APP_PAYSTACK_PUBLIC ||
+      "pk_live_0f3bffb988a5f8dd748dba25e79a609d735e3685",
+  };
+
+  const onSuccess = () => {
+    console.log("reference");
+    // implementation for  whatever you want to do when the Payment is successful.
+    checkout();
+  };
+
+  // you can call this function anything
+  const onClose = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    alert("transaction closed");
+  };
+
+  console.log(config);
+
+  const initializePayment = usePaystackPayment(config); //initializing the payment
+
   const checkout = () => {
     if (isLoggedIn) {
-      console.log(totalAmount)
       navigate("/check out-details");
     } else {
       dispatch(SAVE_URL(url));
-      navigate("/login");
+      // navigate("/login");
     }
   };
 
@@ -101,59 +134,56 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {
+                {cartItems.map((cart, index) => {
+                  console.log(cart);
+                  const { name, price, image } = cart.product;
+                  const { _id, quantity } = cart;
 
-                  cartItems.map((cart, index) => {
-                    console.log(cart)
-                    const { name, price, image } = cart.product;
-                    const { _id, quantity } = cart;
+                  if (!product.includes(_id)) {
+                    product.push(_id);
+                    totalAmount += Number(price) * Number(quantity);
+                    totalQuantity += Number(quantity);
+                  }
 
-                    if (!product.includes(_id)) {
-                      product.push(_id);
-                      totalAmount += (Number(price) * Number(quantity))
-                      totalQuantity += Number(quantity)
-                    }
-
-
-                    console.log(totalAmount)
-                    return (
-                      <tr key={_id}>
-                        <td>{index + 1}</td>
-                        <td>
+                  console.log(totalAmount);
+                  return (
+                    <tr key={_id}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <p>
+                          <b>{name}</b>
+                        </p>
+                        <img
+                          src={image.filePath}
+                          alt={name}
+                          style={{ width: "100px" }}
+                        />
+                      </td>
+                      <td>{price}</td>
+                      <td>
+                        <div className={styles.count}>
                           <p>
-                            <b>{name}</b>
+                            <b>{quantity}</b>
                           </p>
-                          <img
-                            src={image.filePath}
-                            alt={name}
-                            style={{ width: "100px" }}
-                          />
-                        </td>
-                        <td>{price}</td>
-                        <td>
-                          <div className={styles.count}>
-                            <p>
-                              <b>{quantity}</b>
-                            </p>
-                            {/* <button
+                          {/* <button
                               className="--btn"
                               onClick={() => increaseCart(cart)}
                             >
                               +
                             </button> */}
-                          </div>
-                        </td>
-                        <td>{(Number(price) * quantity).toFixed(2)}</td>
-                        <td className={styles.icons}>
-                          <FaTrashAlt
-                            size={19}
-                            color="red"
-                            onClick={() => removeFromCart(cart)}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
+                        </div>
+                      </td>
+                      <td>{(Number(price) * quantity).toFixed(2)}</td>
+                      <td className={styles.icons}>
+                        <FaTrashAlt
+                          size={19}
+                          color="red"
+                          onClick={() => removeFromCart(cart)}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             <div className={styles.summary}>
@@ -173,13 +203,14 @@ const Cart = () => {
                     <h4>Subtotal:</h4>
                     <h3>{`$${totalAmount}`}</h3>
                   </div>
-                  <a href= "/paystackIntegration"> 
-                      <button
-                        className="--btn --btn-primary --btn-block"
-                      >
-                        Checkout
-                      </button>
-                  </a>
+                  <button
+                    onClick={() => {
+                      initializePayment(onSuccess, onClose);
+                    }}
+                    className="--btn --btn-primary --btn-block"
+                  >
+                    Checkout
+                  </button>
                 </Card>
               </div>
             </div>
