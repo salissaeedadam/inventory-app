@@ -173,13 +173,13 @@ const Cart = () => {
                     <h4>Subtotal:</h4>
                     <h3>{`$${totalAmount}`}</h3>
                   </div>
-                  <Link to="/paystackIntegration"> 
+                  <a href= "/paystackIntegration"> 
                       <button
                         className="--btn --btn-primary --btn-block"
                       >
                         Checkout
                       </button>
-                  </Link>
+                  </a>
                 </Card>
               </div>
             </div>
