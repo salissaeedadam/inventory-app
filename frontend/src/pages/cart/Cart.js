@@ -76,11 +76,11 @@ const Cart = () => {
   //paystack config for the particular payment
   const config = {
     reference: Math.random(),
-    email: user?.email || "email@example.com",
+    email: user?.email || "salissaeedadam@gmail.com",
     amount: totalAmount * 100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
     publicKey:
       process.env.REACT_APP_PAYSTACK_PUBLIC ||
-      "pk_live_0f3bffb988a5f8dd748dba25e79a609d735e3685",
+      "pk_test_b44d3dd68d464a9b4df98646246397b752a97ccc",
   };
 
   const onSuccess = () => {
@@ -101,7 +101,7 @@ const Cart = () => {
 
   const checkout = () => {
     if (isLoggedIn) {
-      navigate("/check out-details");
+      navigate("/salesHistory");
     } else {
       dispatch(SAVE_URL(url));
       // navigate("/login");

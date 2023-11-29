@@ -15,6 +15,7 @@ const SalesHistory = () => {
 
   useEffect(() => {
     // You need to dispatch the STORE_SALES action with data or an API call.
+    dispatch(STORE_SALES(SalesHistory));
     // Example: dispatch(STORE_SALES(someData));
     // This should be the data from your sales history.
     // Replace 'someData' with the actual data or API call.
