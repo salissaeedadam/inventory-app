@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ADD_TO_CART,
-  ADD_TO_ORDERS,
   CALCULATE_SUBTOTAL,
   CALCULATE_TOTAL_QUANTITY,
   CLEAR_CART,
@@ -23,7 +22,6 @@ import {
 } from "../../redux/features/auth/authSlice";
 
 import { usePaystackPayment } from "react-paystack";
-import { getCart } from "../../services/cartAPI";
 
 const product = [];
 let totalAmount = 0;
@@ -101,10 +99,8 @@ const Cart = () => {
 
   const initializePayment = usePaystackPayment(config); //initializing the payment
 
-  const checkout = async () => {
+  const checkout = () => {
     if (isLoggedIn) {
-      const cart = await getCart();
-      dispatch(ADD_TO_ORDERS(cart));
       navigate("/salesHistory");
     } else {
       dispatch(SAVE_URL(url));
