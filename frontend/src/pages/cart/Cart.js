@@ -138,8 +138,13 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map((cart, index) => {
-                  console.log(cart);
+                {cartItems?.map((cart, index) => {
+                  console.log("cart", cart);
+
+                  if (!cart.product) {
+                    return <tr></tr>;
+                  }
+
                   const { name, price, image } = cart.product;
                   const { _id, quantity } = cart;
 
