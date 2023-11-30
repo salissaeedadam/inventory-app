@@ -1,11 +1,15 @@
 // cartSlice.js
-import { createSlice } from '@reduxjs/toolkit';
-import { toast } from "react-toastify"
-
+import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 const cartItemsFromLocalStorage = localStorage.getItem("cartItems");
+const ordersFromLocalStorage = localStorage.getItem("orders");
 const initialState = {
-  cartItems: cartItemsFromLocalStorage ? JSON.parse(cartItemsFromLocalStorage) : [],
+  cartItems: cartItemsFromLocalStorage
+    ? JSON.parse(cartItemsFromLocalStorage)
+    : [],
+  orders: ordersFromLocalStorage ? JSON.parse(ordersFromLocalStorage) : [],
+
   cartTotalQuantity: 0,
   cartTotalAmount: 0,
   previousURL: "",
@@ -40,9 +44,25 @@ const cartSlice = createSlice({
       // save cart to LS
       localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
+    ADD_TO_ORDERS(state, action) {
+      //   console.log(action.payload);
+      const productIndex = state.orders.findIndex(
+        (item) => item.id === action.payload.id
+      );
+
+      // Item doesn't exists in the cart
+      // Add item to the cart
+      const tempProduct = { ...action.payload, cartQuantity: 1 };
+      state.orders.push(tempProduct);
+      toast.success(`${action.payload.name} added to cart`, {
+        position: "top-left",
+      });
+      // save cart to LS
+      localStorage.setItem("orders", JSON.stringify(state.orders));
+    },
     CALC_CART_VALUE(state, action) {
       const cartItems = action.payload;
-    
+
       // Check if cartItems is an array before using map
       if (Array.isArray(cartItems)) {
         const array = [];
@@ -51,18 +71,18 @@ const cartSlice = createSlice({
           const productValue = price * quantity;
           return array.push(productValue);
         });
-        
+
         const totalValue = array.reduce((a, b) => {
           return a + b;
         }, 0);
-        
+
         state.totalStoreValue = totalValue;
         localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
       } else {
         // Handle the case where cartItems is not an array (e.g., show an error, return, or perform a different action).
       }
     },
-    
+
     DECREASE_CART(state, action) {
       console.log(action.payload);
       const productIndex = state.cartItems.findIndex(
@@ -103,7 +123,7 @@ const cartSlice = createSlice({
         position: "top-left",
       });
 
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("cartItems", []);
     },
     CALCULATE_SUBTOTAL(state, action) {
       const array = [];
@@ -138,6 +158,7 @@ const cartSlice = createSlice({
 
 export const {
   ADD_TO_CART,
+  ADD_TO_ORDERS,
   DECREASE_CART,
   REMOVE_FROM_CART,
   CLEAR_CART,
@@ -152,5 +173,6 @@ export const selectCartTotalQuantity = (state) => state.cart.cartTotalQuantity;
 export const selectCartTotalAmount = (state) => state.cart.cartTotalAmount;
 export const selectPreviousURL = (state) => state.cart.previousURL;
 export const cartItems = (state) => state.cart.cartItems;
+export const orders = (state) => state.cart.orders;
 
 export default cartSlice.reducer;
